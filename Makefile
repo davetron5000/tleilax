@@ -5,7 +5,6 @@ $(error ENV must be set)
 endif
 
 DEST_DIR=site/$(ENV)
-
 ifeq ($(ENV),production)
 	MINIFY_CSS_FLAG=--minify
 	MINIFY_JS_FLAG=--minify
@@ -16,6 +15,7 @@ else
 	MINIFY_CSS_FLAG=
 	MINIFY_JS_FLAG=
 endif
+EJS_DATA_FILE=ejs_data_file.$(ENV).json
 
 ## Source Files
 SRC_DIR=src
@@ -67,7 +67,7 @@ $(JS_DEST_FILE) : $(JS_SRC_FILES)
 	npx esbuild $(MINIFY_JS_FLAG) --sourcemap --bundle $(JS_SRC_FILE) --outfile=$(JS_DEST_FILE)
 
 $(HTML_DEST_DIR)/%.html: $(HTML_SRC_DIR)/%.html
-	npx ejs -o $@ $<
+	npx ejs --data-file $(EJS_DATA_FILE) --output-file $@ $<
 
 $(IMAGES_DEST_DIR):
 	@mkdir -p $(IMAGES_DEST_DIR)
